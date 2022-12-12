@@ -18,6 +18,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  favorites Favorite[]
+
   @@map("user")
 }
 
@@ -30,5 +32,18 @@ model Movie {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  favorites Favorite[]
+
   @@map("movie")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  movie     Movie @relation(fields: [movieName], references: [name], onDelete: Cascade)
+  movieName String  @map("product_name")
+  @@unique([userId, movieName])
+  @@map("favorite")
 }
