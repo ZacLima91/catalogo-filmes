@@ -9,18 +9,17 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Padaria Blue')
-    .setDescription('API responsavel pela gestão da Padaria da Blue')
+    .setTitle('API_FILMES')
+    .setDescription('API responsavel pela gestão de catalogo de filmes')
     .setVersion('1.0.0')
     .addTag('users')
-    .addTag('products')
     .addTag('status')
-    .addTag('categories')
-    .addTag('orders')
+    .addTag('movies')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(3333);
 }
 bootstrap();

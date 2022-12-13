@@ -33,6 +33,7 @@ model Movie {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   favorites Favorite[]
+  
 
   @@map("movie")
 }

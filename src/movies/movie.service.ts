@@ -5,6 +5,9 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entity/movie.entity';
 import { Prisma } from '@prisma/client';
+import { FavoriteMovieDto } from 'src/favorites/dto/favorite.dto';
+import { Favorite } from 'src/favorites/entity/favorites.entity';
+import { User } from 'src/user/entity/user.entity';
 
 @Injectable()
 export class MoviesService {
@@ -48,5 +51,59 @@ export class MoviesService {
     return this.prisma.movie.delete({ where: { id } });
   }
   
+  async favorite(dto: FavoriteMovieDto): Promise<Favorite> {
+    const user: User = await this.prisma.user.findUnique({
+      where: { id: dto.userId },
+    });
+    if (!user) {
+      throw new NotFoundException(`Entrada de id ${dto.userId} não encontrada`);
+    }
+
+    const movie: Movie = await this.prisma.movie.findUnique({
+      where: { name: dto.movieName },
+    });
+
+    if (!movie) {
+      throw new NotFoundException(
+        `Filme de nome '${dto.movieName}' não encontrado`,
+      );
+    }
+
+    const data: Prisma.FavoriteCreateInput = {
+      user: {
+        connect: {
+          id: dto.userId,
+        },
+      },
+      movie: {
+        connect: {
+          name: dto.movieName,
+        },
+      },
+    };
+
+    return this.prisma.favorite.create({ data });
+  }
+
+  async disfavoring(id: string) {
+    await this.verifyIdAndReturnUser(id);
+    return this.prisma.favorite.delete({ where: { id } });
+  }
+
+  async findUsersLiked(id: string) {
+    const movie: Movie = await this.prisma.movie.findUnique({
+      where: { id },
+    });
+
+    return this.prisma.favorite.findMany({
+      where: {
+        movieName: movie.name,
+      },
+      select: {
+        movieName: true,
+        user: { select: { id: true, name: true } },
+      },
+    });
+  }
  
 }

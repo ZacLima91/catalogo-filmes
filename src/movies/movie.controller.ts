@@ -6,17 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MoviesService } from './movie.service';
 import { Movie } from './entity/movie.entity';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { FavoriteMovieDto } from 'src/favorites/dto/favorite.dto';
+import { Favorite } from 'src/favorites/entity/favorites.entity';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 
 @ApiTags('movies')
 @Controller('movies')
 export class MovieController {
   constructor(private readonly moviesService: MoviesService) {}
+
 
   @Post()
   @ApiOperation({
@@ -42,13 +47,13 @@ export class MovieController {
     return this.moviesService.findOne(id);
   }
 
-  /*@Get(':id/users-liked')
+  @Get(':id/users-liked')
     @ApiOperation({
-      summary: 'Lista de usuários que tem o produto do id enviado como favorito',
+      summary: 'Lista de usuários que tem o filme do id enviado como favorito',
     })
     findUsersLiked(@Param('id') id: string) {
-      return this.productsService.findUsersLiked(id);
-    }*/
+      return this.moviesService.findUsersLiked(id);
+    }
 
   @Patch(':id')
   @ApiOperation({
@@ -66,19 +71,19 @@ export class MovieController {
     return this.moviesService.remove(id);
   }
 
-  /*@Post('favorite')
+ @Post('favorite')
     @ApiOperation({
-      summary: 'Favoritar produto',
+      summary: 'Favoritar filme',
     })
-    favorite(@Body() dto: FavoriteProductDto): Promise<Favorite> {
-      return this.productsService.favorite(dto);
+    favorite(@Body() dto: FavoriteMovieDto): Promise<Favorite> {
+      return this.moviesService.favorite(dto);
     }
   
     @Delete('favorite/:id')
     @ApiOperation({
-      summary: 'Desfavoritar produto',
+      summary: 'Desfavoritar filme',
     })
     disfavoring(@Param('id') id: string) {
-      return this.productsService.disfavoring(id);
-    }*/
+      return this.moviesService.disfavoring(id);
+    }
 }
