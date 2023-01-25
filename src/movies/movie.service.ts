@@ -14,7 +14,7 @@ export class MoviesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateMovieDto): Promise<Movie | void> {
-    return this.prisma.movie
+    return await this.prisma.movie
       .create({ data: dto })
       .catch(handleConstrainUniqueError);
   }
@@ -50,40 +50,8 @@ export class MoviesService {
     await this.verifyIdAndReturnUser(id);
     return this.prisma.movie.delete({ where: { id } });
   }
+
   
-  async favorite(dto: FavoriteMovieDto): Promise<Favorite> {
-    const user: User = await this.prisma.user.findUnique({
-      where: { id: dto.userId },
-    });
-    if (!user) {
-      throw new NotFoundException(`Entrada de id ${dto.userId} não encontrada`);
-    }
-
-    const movie: Movie = await this.prisma.movie.findUnique({
-      where: { name: dto.movieName },
-    });
-
-    if (!movie) {
-      throw new NotFoundException(
-        `Filme de nome '${dto.movieName}' não encontrado`,
-      );
-    }
-
-    const data: Prisma.FavoriteCreateInput = {
-      user: {
-        connect: {
-          id: dto.userId,
-        },
-      },
-      movie: {
-        connect: {
-          name: dto.movieName,
-        },
-      },
-    };
-
-    return this.prisma.favorite.create({ data });
-  }
 
   async disfavoring(id: string) {
     await this.verifyIdAndReturnUser(id);
@@ -97,13 +65,12 @@ export class MoviesService {
 
     return this.prisma.favorite.findMany({
       where: {
-        movieName: movie.name,
+        movieId: movie.id,
       },
       select: {
-        movieName: true,
+        movieId: true,
         user: { select: { id: true, name: true } },
       },
     });
   }
- 
 }

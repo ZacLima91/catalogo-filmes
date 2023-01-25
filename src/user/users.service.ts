@@ -13,6 +13,7 @@ export class UsersService {
     id: true,
     name: true,
     email: true,
+    favorites: true,
     updatedAt: true,
     createdAt: true,
   };
@@ -39,7 +40,14 @@ export class UsersService {
   async verifyIdAndReturnUser(id: string): Promise<User> {
     const user: User = await this.prisma.user.findUnique({
       where: { id },
-      select: this.userSelect,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        favorites: true,
+      },
     });
 
     if (!user) {
@@ -69,11 +77,5 @@ export class UsersService {
     return this.prisma.user.delete({ where: { id }, select: this.userSelect });
   }
 
-  async findFavoriteMovies(id: string): Promise<Favorite[]> {
-    await this.verifyIdAndReturnUser(id);
-    return this.prisma.favorite.findMany({
-      where: { userId: id },
-      select: { movieName: true },
-    });
-  }
+  
 }

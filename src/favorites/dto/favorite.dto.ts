@@ -11,8 +11,8 @@ export class FavoriteMovieDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    description: 'Nome do filme a ser favoritado',
-    example: 'Batman',
+    description: 'Id do filme a ser favoritado',
+    example: 'acb989bb-c9ee-4d13-bf8a-6dab15cce935',
   })
-  movieName: string;
+  movieId: string;
 }

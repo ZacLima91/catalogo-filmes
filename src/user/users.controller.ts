@@ -69,11 +69,5 @@ export class UsersController {
   }
 
   
-  @Get(':id/favorites')
-  @ApiOperation({
-    summary: 'Lista de produtos favoritos de um usuário',
-  })
-  findFavoriteProducts(@Param('id') id: string): Promise<Favorite[]> {
-    return this.usersService.findFavoriteMovies(id);
-  }
+ 
 }

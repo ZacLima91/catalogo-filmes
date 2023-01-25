@@ -25,6 +25,20 @@ export class CreateMovieDto {
   })
   imgUrl: string;
 
+  @IsUrl()
+  @ApiProperty({
+    description: 'Link da imagem do filme para fundo de tela',
+    example: 'https://i.imgur.com/sgsdgsd.png',
+  })
+  imgFullScreen: string;
+
+  @IsUrl()
+  @ApiProperty({
+    description: 'Link do trailer do filme',
+    example: 'https://i.video.com/sgsdgsd',
+  })
+  trailer: string;
+
   @IsNumber()
   @ApiProperty({
     description: 'Ano do filme',

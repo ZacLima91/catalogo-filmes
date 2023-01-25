@@ -22,7 +22,6 @@ import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 export class MovieController {
   constructor(private readonly moviesService: MoviesService) {}
 
-
   @Post()
   @ApiOperation({
     summary: 'Criação de filmes',
@@ -48,12 +47,12 @@ export class MovieController {
   }
 
   @Get(':id/users-liked')
-    @ApiOperation({
-      summary: 'Lista de usuários que tem o filme do id enviado como favorito',
-    })
-    findUsersLiked(@Param('id') id: string) {
-      return this.moviesService.findUsersLiked(id);
-    }
+  @ApiOperation({
+    summary: 'Lista de usuários que tem o filme do id enviado como favorito',
+  })
+  findUsersLiked(@Param('id') id: string) {
+    return this.moviesService.findUsersLiked(id);
+  }
 
   @Patch(':id')
   @ApiOperation({
@@ -71,19 +70,13 @@ export class MovieController {
     return this.moviesService.remove(id);
   }
 
- @Post('favorite')
-    @ApiOperation({
-      summary: 'Favoritar filme',
-    })
-    favorite(@Body() dto: FavoriteMovieDto): Promise<Favorite> {
-      return this.moviesService.favorite(dto);
-    }
-  
-    @Delete('favorite/:id')
-    @ApiOperation({
-      summary: 'Desfavoritar filme',
-    })
-    disfavoring(@Param('id') id: string) {
-      return this.moviesService.disfavoring(id);
-    }
+ 
+
+  @Delete('favorite/:id')
+  @ApiOperation({
+    summary: 'Desfavoritar filme',
+  })
+  disfavoring(@Param('id') id: string) {
+    return this.moviesService.disfavoring(id);
+  }
 }
